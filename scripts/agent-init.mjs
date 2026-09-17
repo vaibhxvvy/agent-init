@@ -1,0 +1,74 @@
+// agent-init scaffolder — zero-deps node.
+// Usage: node scripts/agent-init.mjs --here [--name X] [--stack Y] [--dry-run] [--agent all|opencode|claude|codex]
+import { cpSync, existsSync, renameSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const argv = process.argv.slice(2);
+const get = (k, d = "") => { const i = argv.indexOf(k); return i >= 0 && argv[i + 1] ? argv[i + 1] : d; };
+const dry = argv.includes("--dry-run");
+const here = argv.includes("--here") || argv.includes("--project");
+const name = get("--name", "my-project");
+const stack = get("--stack", "node + opencode");
+const agent = get("--agent", "all");
+const targetDir = argv.includes("--project") && argv[argv.indexOf("--project") + 1] && !argv[argv.indexOf("--project") + 1].startsWith("--")
+  ? argv[argv.indexOf("--project") + 1] : process.cwd();
+const src = join(root, "templates", "project");
+const dst = here || argv.includes("--project") ? targetDir : join(process.cwd(), "agent-init-out");
+
+const list = (d, base = "") => readdirSync(d).flatMap((f) => {
+  const p = join(d, f); const rel = join(base, f);
+  return statSync(p).isDirectory() ? list(p, rel) : [rel];
+});
+console.log(`[agent-init] ${dry ? "DRY-RUN " : ""}scaffold: ${src} -> ${dst} (name=${name} agent=${agent})`);
+for (const rel of list(src)) {
+  const s = join(src, rel);
+  if (rel.includes(".opencode") && agent === "claude") continue; // claude mirror added in Phase C
+  console.log(`  ${dry ? "would write" : "write"}: ${rel}`);
+}
+if (dry) { console.log("[agent-init] dry-run ok — no writes."); process.exit(0); }
+if (existsSync(join(dst, "AGENTS.md"))) {
+  const b = join(dst, `AGENTS.md.bak-${Date.now()}`);
+  renameSync(join(dst, "AGENTS.md"), b); console.log(`backup: AGENTS.md -> ${b}`);
+}
+mkdirSync(dst, { recursive: true });
+cpSync(src, dst, { recursive: true, filter: (s) => !(s.includes(".opencode") && agent === "claude") });
+// fill placeholders
+const fill = (p, map) => {
+  let t = readFileSync(p, "utf8"); let changed = false;
+  for (const [k, v] of Object.entries(map)) if (t.includes(k)) { t = t.replaceAll(k, v); changed = true; }
+  if (changed) writeFileSync(p, t);
+};
+const agentsPath = join(dst, "AGENTS.md");
+if (existsSync(agentsPath)) fill(agentsPath, { "{{PROJECT_NAME}}": name, "{{ONE_PARAGRAPH_OUTCOME}}": `${name} — outcome filled post ideas discussion`, "{{FRAMEWORK}}": stack });
+for (const rel of list(dst)) {
+  if (rel.endsWith(".md")) {
+    const p = join(dst, rel);
+    try { fill(p, { "{{PROJECT_NAME}}": name }); } catch {}
+  }
+}
+// seed INC-001 + NAVIGATION verify
+const inc1 = join(dst, "docs", "issues", "INC-001-project-bootstrap.md");
+if (!existsSync(inc1)) {
+  const today = new Date().toISOString().slice(0, 10);
+  writeFileSync(inc1, `---\nuid: INC-001\ntitle: Project bootstrap (${name})\nstatus: in_progress\nseverity: info\nassignee: unassigned\ncreated: ${today}\nupdated: ${today}\nlabels: [bootstrap]\n---\n\n## Description\n\nInitial scaffold from agent-init template. Fill AGENTS.md placeholders, confirm stack/commands, file next issues.\n\n## Acceptance criteria\n\n- [ ] AGENTS.md has zero {{PLACEHOLDERS}}\n- [ ] docs/NAVIGATION.md paths all exist\n- [ ] first session log created\n`);
+  console.log("seed: docs/issues/INC-001-project-bootstrap.md");
+}
+// verify NAVIGATION paths
+const nav = join(dst, "docs", "NAVIGATION.md");
+if (existsSync(nav)) {
+  const t = readFileSync(nav, "utf8");
+  const missing = [...t.matchAll(/`((?:AGENTS\.md|AGENTRULES\.md|docs\/[^`]+|roadmap\.md)[^`]*)`/g)]
+    .map((m) => m[1].split(" ")[0]).filter((p) => !existsSync(join(dst, p)) && !p.includes("<handle>") && !p.includes("*"));
+  if (missing.length) { console.error(`NAVIGATION verify FAILED — missing: ${missing.join(", ")}`); process.exit(1); }
+  console.log("verify: NAVIGATION paths ok");
+}
+const leftovers = [];
+for (const rel of list(dst)) {
+  if (!rel.endsWith(".md")) continue;
+  const t = readFileSync(join(dst, rel), "utf8");
+  if (t.includes("{{")) leftovers.push(rel);
+}
+if (leftovers.length) console.log(`warn: placeholders remain in: ${leftovers.join(", ")}`);
+else console.log("verify: zero {{PLACEHOLDERS}} in .md (excluding intentional agent docs)");
+console.log(`[agent-init] done -> ${dst}`);
