@@ -3,8 +3,15 @@
 # Usage: curl -fsSL https://raw.githubusercontent.com/vaibhxvvy/agent-init/main/install.sh | bash
 #        bash install.sh [repo-dir] [--whatif]
 set -euo pipefail
+REPO_URL="https://github.com/vaibhxvvy/agent-init"
 REPO="${1:-$(cd "$(dirname "$0")" && pwd)}"
 WHATIF="${2:-}"
+if [ ! -f "$REPO/templates/global/AGENTS.md" ]; then
+  echo "downloading: $REPO_URL"
+  TMP="$(mktemp -d)/agent-init"; mkdir -p "$TMP"
+  curl -fsSL "$REPO_URL/archive/refs/heads/main.tar.gz" | tar -xz -C "$TMP" --strip-components=1
+  REPO="$TMP"
+fi
 TS="$(date +%Y%m%d-%H%M%S)"
 backup() { [ -e "$1" ] && echo "backup: $1 -> $1.bak-$TS" && [ "$WHATIF" != "--whatif" ] && cp "$1" "$1.bak-$TS"; true; }
 install_file() { [ -f "$1" ] || { echo "skip (missing): $1"; return; }; echo "installed: $2"; [ "$WHATIF" != "--whatif" ] && { mkdir -p "$(dirname "$2")"; cp "$1" "$2"; }; true; }

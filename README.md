@@ -3,7 +3,23 @@
 > Extracted from `incruit` (SaaS, TS) + `chopsticks` (Rust launcher) agentic systems.
 > Install once → every future `/init` uses YOUR template, auto-scaffolds roadmap/design/issues/logs/rules.
 
-## One-click install
+## Install (one command)
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/vaibhxvvy/agent-init/main/install.ps1 | iex
+```
+
+**macOS / Linux:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/vaibhxvvy/agent-init/main/install.sh | bash
+```
+
+No clone needed — the installer downloads the template itself, backs up your existing globals, and installs for opencode + Claude + Codex. Then open any project and run `/init`.
+
+## Other install methods
 
 **npm (recommended):**
 

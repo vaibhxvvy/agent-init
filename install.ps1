@@ -5,7 +5,20 @@
 #   & .\install.ps1 [-Repo <path>] [-Npm] [-WhatIf]
 param([string]$Repo = "", [switch]$Npm, [switch]$WhatIf)
 $ErrorActionPreference = "Stop"
-if (-not $Repo) { $Repo = Split-Path -Parent $MyInvocation.MyCommand.Path; if (-not $Repo) { $Repo = "C:\Users\vaibh\Desktop\agent-init" } }
+$RepoUrl = "https://github.com/vaibhxvvy/agent-init"
+if ($Npm) { npm i -g agent-init; agent-init --global; exit $LASTEXITCODE }
+if (-not $Repo) {
+  $here = Split-Path -Parent $MyInvocation.MyCommand.Path
+  if ($here -and (Test-Path -LiteralPath (Join-Path $here "templates\global\AGENTS.md"))) { $Repo = $here }
+}
+if ((-not $Repo) -or (-not (Test-Path -LiteralPath (Join-Path $Repo "templates\global\AGENTS.md")))) {
+  $tmp = Join-Path ([IO.Path]::GetTempPath()) ("agent-init-" + [Guid]::NewGuid().ToString("N").Substring(0, 8))
+  New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+  Write-Host "downloading: $RepoUrl"
+  Invoke-WebRequest -Uri "$RepoUrl/archive/refs/heads/main.zip" -OutFile (Join-Path $tmp "repo.zip")
+  Expand-Archive -LiteralPath (Join-Path $tmp "repo.zip") -DestinationPath $tmp -Force
+  $Repo = Join-Path $tmp "agent-init-main"
+}
 $ts = Get-Date -Format "yyyyMMdd-HHmmss"
 function Backup([string]$p) { if (Test-Path -LiteralPath $p) { $b = "$p.bak-$ts"; if (-not $WhatIf) { Copy-Item -LiteralPath $p -Destination $b -Force }; Write-Host "backup: $p -> $b" } }
 function Install-File([string]$src, [string]$dst) {
