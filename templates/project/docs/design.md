@@ -1,6 +1,6 @@
 # Design — living architecture decisions
 
-> Chopsticks `CHOPSTICKS_STATE.md` pattern: single source for decisions + state + next moves. Update per significant change; link issues, never duplicate them.
+> Single source for decisions + state + next moves. Update per significant change; link issues, never duplicate them.
 
 ## Decisions
 
@@ -16,4 +16,4 @@
 
 ## Next moves
 
-1. {{NEXT_1}} (linked: `docs/issues/INC-002-*.md`)
+1. {{NEXT_1}} (linked: `docs/issues/{{UID_PREFIX}}-002-*.md`)

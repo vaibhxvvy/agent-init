@@ -14,7 +14,9 @@ Usage:
   node scripts/agent-init.mjs --here --name "X" --dry-run   preview only
 Flags:
   --agent <opencode|claude|codex|all>  default all
-  --name <project> --stack <stack>     fill {{PLACEHOLDERS}}
+  --name <project>                     fill {{PROJECT_NAME}} (default: basename of target dir)
+  --prefix <ABC>                       UID prefix 2-5 uppercase alphanumerics (default: 3-letter acronym of name)
+  --stack <stack>                      fill {{FRAMEWORK}}
   --dry-run                            preview, write nothing`);
   process.exit(0);
 }

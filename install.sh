@@ -26,6 +26,9 @@ pairs=(
   "templates/project/.claude/commands/roadmap.md|$HOME/.claude/commands/roadmap.md"
   "templates/project/.claude/commands/design.md|$HOME/.claude/commands/design.md"
   "templates/project/.claude/commands/log.md|$HOME/.claude/commands/log.md"
+  "skills/agent-init/SKILL.md|$HOME/.config/opencode/skills/agent-init/SKILL.md"
+  "skills/agent-init/SKILL.md|$HOME/.claude/skills/agent-init/SKILL.md"
+  "skills/agent-init/SKILL.md|$HOME/.agents/skills/agent-init/SKILL.md"
 )
 for p in "${pairs[@]}"; do backup "${p#*|}"; done
 for p in "${pairs[@]}"; do install_file "$REPO/${p%%|*}" "${p#*|}"; done

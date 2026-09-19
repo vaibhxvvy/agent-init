@@ -1,7 +1,7 @@
 # Pull Request
 
-Title: `type(INC-XXX): imperative summary` (docs-only: `docs(scope): …`). One concern per PR.
-Closes: `Closes docs/issues/INC-XXX-*.md` (or `n/a — docs-only`).
+Title: `type({{UID_PREFIX}}-XXX): imperative summary` (docs-only: `docs(scope): …`). One concern per PR.
+Closes: `Closes docs/issues/{{UID_PREFIX}}-XXX-*.md` (or `n/a — docs-only`).
 
 ## What changed (by subsystem)
 

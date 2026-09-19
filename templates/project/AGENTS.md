@@ -1,7 +1,6 @@
 # AGENTS.md — Handbook for AI Agents Working on {{PROJECT_NAME}}
 
 > Read this fully before writing any code. Pair it with `AGENTRULES.md` (behavior, commit policy, mandatory session logging). `README.md` is the human deep reference. Lost? Start at `docs/NAVIGATION.md`.
-> Source: extracted from incruit AGENTS.md + chopsticks AGENTS.md (single-source-of-truth pattern).
 
 ## What This Project Is
 
@@ -36,12 +35,12 @@ Env setup: copy `.env.example` → `.env` (agents: never edit — see AGENTRULES
 ```text
 {{REPO_TREE}}
 # Keep one line per dir: what lives where + which file is the entry point.
-# Chopsticks pattern: comment each file's role (atomics/channel/guard/threads).
+# Comment each file's role so the next agent knows where to look.
 ```
 
 ## Conventions You Must Follow
 
-1. **Boundary sacred.** (incruit: `*.server.ts` never imported client-side; chopsticks: no `unsafe` at call sites, Win32 behind safe wrappers). Name YOUR boundary here.
+1. **Boundary sacred.** Name YOUR boundary here (e.g. server-only modules never imported client-side; unsafe/platform code behind safe wrappers). Violations reverted.
 2. **Privileged clients separated.** user-scoped vs service-role/admin — never mix, never leak secrets client-side.
 3. **Layering:** `domain` (pure) → `repositories` → `services` → wiring. Respect it.
 4. **Money/time/units:** integers + UTC ISO (or your domain invariant). Never float money math.
@@ -51,8 +50,8 @@ Env setup: copy `.env.example` → `.env` (agents: never edit — see AGENTRULES
 8. **Migrations:** append-only timestamped; never edit applied; RLS/policy required for user-readable tables.
 9. **Naming:** match neighbors first (PascalCase components, camelCase fns, kebab-case libs).
 10. **Comments/JSDoc:** every export documented; WHY + invariants. English, no emojis.
-11. **Provider pattern (chopsticks):** new capability = new provider implementing `SearchProvider`-like trait (`id/should_run/search/activate/refresh/revision`), registered in ONE registry, isolated by `catch_unwind`-equivalent. Score bands documented here when you add one.
-12. **Future stages gated (chopsticks):** do NOT build plugins/daemon/multi-crate/event-bus until trigger met — record trigger in `future.md`.
+11. **Capability pattern:** new capability = new provider implementing the shared trait (`id/should_run/search/activate/refresh/revision` or your equivalent), registered in ONE registry, isolated so one failure cannot take down the rest. Score bands documented here when you add one.
+12. **Future stages gated:** do NOT build plugins/daemon/multi-crate/event-bus until trigger met — record trigger in `future.md`.
 
 ## Environment Variables
 

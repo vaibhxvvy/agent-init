@@ -1,5 +1,5 @@
 ---
-uid: INC-XXX
+uid: {{UID_PREFIX}}-XXX
 title: Short title in plain language
 status: open
 severity: medium

@@ -37,7 +37,10 @@ $files = @(
   @("templates\project\.claude\commands\init.md", (Join-Path $HOME ".claude\commands\init.md")),
   @("templates\project\.claude\commands\roadmap.md", (Join-Path $HOME ".claude\commands\roadmap.md")),
   @("templates\project\.claude\commands\design.md", (Join-Path $HOME ".claude\commands\design.md")),
-  @("templates\project\.claude\commands\log.md", (Join-Path $HOME ".claude\commands\log.md"))
+  @("templates\project\.claude\commands\log.md", (Join-Path $HOME ".claude\commands\log.md")),
+  @("skills\agent-init\SKILL.md", (Join-Path $HOME ".config\opencode\skills\agent-init\SKILL.md")),
+  @("skills\agent-init\SKILL.md", (Join-Path $HOME ".claude\skills\agent-init\SKILL.md")),
+  @("skills\agent-init\SKILL.md", (Join-Path $HOME ".agents\skills\agent-init\SKILL.md"))
 )
 foreach ($f in $files) { Backup $f[1] }
 foreach ($f in $files) { Install-File (Join-Path $Repo $f[0]) $f[1] }

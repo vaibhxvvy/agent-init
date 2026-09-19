@@ -11,12 +11,12 @@ Private or open — humans + agents + testers.
 - Read `AGENTS.md` + `AGENTRULES.md` before touching anything.
 - Branch `<handle>/<task>` off `origin/main` (fetch first; rebase own unpushed only; push own branch freely; never `main`/`--force`; admin squash-merges).
 - Per-session log `docs/agent-logs/<handle>/YYYY-MM-DD-HHmm.md` (§3 exact) before finishing.
-- Issues `docs/issues/INC-XXX-*.md` per AGENTRULES §5.1; UID in commits/PR.
+- Issues `docs/issues/{{UID_PREFIX}}-XXX-*.md` per AGENTRULES §5.1; UID in commits/PR.
 - Comment-only = additions-only diffs.
 
 ## For testers
 
-- Every finding = `INC-XXX-*.md` (or GitHub issue) with replayable Reproduction (URL/clicks/role/expected-vs-actual/logs). Verify on preview vs Acceptance; author closes (`## Solution` + `solved/`). Never prod data/real payments.
+- Every finding = `{{UID_PREFIX}}-XXX-*.md` (or GitHub issue) with replayable Reproduction (URL/clicks/role/expected-vs-actual/logs). Verify on preview vs Acceptance; author closes (`## Solution` + `solved/`). Never prod data/real payments.
 
 ## Ground rules
 

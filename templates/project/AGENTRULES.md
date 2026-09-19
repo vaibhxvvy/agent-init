@@ -1,7 +1,6 @@
 # AGENTRULES.md — Mandatory Rules for AI Coding Agents
 
 > Every AI agent MUST follow without exception. `AGENTS.md` = how to work in codebase. This file = how you behave + prove it. Overrides agent defaults. Violations reverted.
-> Extracted from incruit AGENTRULES.md (golden for vibe-coding ledger discipline).
 
 ## 1. The Golden Rules
 
@@ -26,7 +25,7 @@ Style: Conventional Commits imperative (`feat/fix/docs/style/refactor/test/chore
 
 1. Identity: `git config --get init.contributor`, else ask once (`[a-z0-9-]`), set + roster row in `docs/agent-logs/CONTRIBUTORS.md`.
 2. Branch `<handle>/<short-task>` off latest `origin/main`. Record base SHA.
-3. Granular commits + §4 per commit. 4. Log file in final commit. 5. Push + open PR (`Closes docs/issues/INC-XXX-*.md`). 6. ONLY admin squash-merges (bot `git mv` to `solved/` excepted). 7. After merge delete branch, note squashed SHA next session.
+3. Granular commits + §4 per commit. 4. Log file in final commit. 5. Push + open PR (`Closes docs/issues/{{UID_PREFIX}}-XXX-*.md`). 6. ONLY admin squash-merges (bot `git mv` to `solved/` excepted). 7. After merge delete branch, note squashed SHA next session.
 
 ### 2.2 Stay current
 
@@ -56,9 +55,9 @@ Strict mode on, boundary respected, WHY-comments + JSDoc, Prettier enforced, no 
 
 ### 5.1 Issues (`docs/issues/`)
 
-- One file `docs/issues/<UID>-<kebab>.md`, UID `INC-XXX` (or `FEAT-XXX` — pick one, keep monotonic). Next = max+1 (`git ls-files docs/issues/INC-*.md | sort`); race → second merger `git mv` renames.
+- One file `docs/issues/<UID>-<kebab>.md`, UID `<PREFIX>-XXX` where `<PREFIX>` is the 3-letter acronym of your project name (derived at scaffold; `my-cool-app` → `MCA-001`). Override once via `--prefix` if needed, then keep monotonic. Next = max+1 (`git ls-files docs/issues/<PREFIX>-*.md | sort`); race → second merger `git mv` renames.
 - Copy `TEMPLATE.md` (frontmatter `uid/title/status/severity/assignee/created/updated/labels` + Description/Repro/Proposed/Acceptance/References/Solution).
-- Branch `<handle>/INC-XXX-desc`, UID in commits + PR title/body.
+- Branch `<handle>/<PREFIX>-XXX-desc`, UID in commits + PR title/body.
 - Statuses `open→in_progress→review→closed`; assignee moves forward; `review→closed` via merge + `git mv` to `solved/` + manual issue close after testing.
 - **Assignment before solve:** `assignee:<handle>` + `in_progress` BEFORE fix. Sequence: assigned → solved (## Solution) → moved → PR opened. Skips reverted.
 

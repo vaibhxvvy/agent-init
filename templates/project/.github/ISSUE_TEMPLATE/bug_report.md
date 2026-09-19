@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Reproducible bug (auto-creates INC-XXX via sync or manual)
+about: Reproducible bug (auto-creates {{UID_PREFIX}}-XXX via sync or manual)
 ---
 
 **Area**: scheduling/booking/payments/meeting/notifications/support/admin/site/infra/auth/profile

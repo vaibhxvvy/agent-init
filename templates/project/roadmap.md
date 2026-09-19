@@ -6,4 +6,4 @@
 > - **Done:** `docs/issues/solved/` (each with `## Solution`) + `CHANGELOG.md`
 > - **History:** `docs/agent-logs/<handle>/` + `docs/ideas.md` + `docs/design.md`
 >
-> Add work by creating the next `docs/issues/INC-XXX-*.md` from `TEMPLATE.md`, never by editing this file.
+> Add work by creating the next `docs/issues/{{UID_PREFIX}}-XXX-*.md` from `TEMPLATE.md`, never by editing this file.

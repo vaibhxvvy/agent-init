@@ -1,6 +1,6 @@
 # agent-init — one-click agentic setup for any CLI agent
 
-> Extracted from `incruit` (SaaS, TS) + `chopsticks` (Rust launcher) agentic systems.
+> Distilled from two production agentic systems (a TS SaaS app + a Rust launcher).
 > Install once → every future `/init` uses YOUR template, auto-scaffolds roadmap/design/issues/logs/rules.
 
 ## Install (one command)
@@ -48,8 +48,8 @@ Idempotent — backs up `AGENTS.md`/`CLAUDE.md`/`init.md` to `*.bak-<ts>` before
 
 - Stock `/init` writes a thin `AGENTS.md`. **Overridden `/init`** instead:
   1. **Ideas discussion** (≤5 Qs) → `docs/ideas.md` (Goal/Personas/Stack/Non-goals/Open Qs, then frozen).
-  2. **Scaffold** — `npx agent-init --project . --name <name>` (backs up, copies `templates/project/`, seeds `INC-001`, verifies NAVIGATION paths).
-  3. **Fill** — placeholders → stack/repo/commands, first `INC-001-*` + first session log, NAVIGATION links.
+  2. **Scaffold** — `npx agent-init --project .` (name inferred from dir; `--name` overrides. Backs up, copies `templates/project/`, seeds `<PREFIX>-001` where prefix is the 3-letter acronym of the name, verifies NAVIGATION paths).
+  3. **Fill** — placeholders → stack/repo/commands, first `<PREFIX>-001-*` + first session log, NAVIGATION links.
   4. **Verify** — formatter/typecheck/tests per stack; zero `{{PLACEHOLDERS}}` required.
 
 Extra commands: `/roadmap` (tracker rollup, never edits roadmap.md), `/design` (append decision row), `/log` (session log stub).
@@ -71,11 +71,17 @@ agent-init/
 │   ├── .opencode/commands/{init,roadmap,design,log}.md
 │   ├── .claude/commands/{init,roadmap,design,log}.md
 │   └── .github/{PULL_REQUEST_TEMPLATE,ISSUE_TEMPLATE/{bug,feature}}.md
-├── scripts/agent-init.mjs        # scaffolder (zero-deps, NAVIGATION verify, INC-001 seed)
+├── scripts/agent-init.mjs        # scaffolder (zero-deps, name inference, UID-prefix seed, NAVIGATION verify)
 └── opencode.json.example         # instructions[] to merge
 ```
 
 ## Extracted segments (why this template)
 
-- Incruit: handbook shape (stack/commands/repo map/conventions/env), AGENTRULES §§1-7 (branches/logs/checks/INC-XXX assignment-before-solve), NAVIGATION fresh/frozen + enum law, severity rubric, PR/tester sections.
-- Chopsticks: single-source-of-truth + per-file layout, provider-trait + scores + isolation, Future-Stages gated table, release flow (never delete), living-state + checkbox tracker + design tokens.
+- Handbook shape (stack/commands/repo map/conventions/env), AGENTRULES §§1-7 (branches/logs/checks/prefix-UID assignment-before-solve), NAVIGATION fresh/frozen + enum law, severity rubric, PR/tester sections.
+- Single-source-of-truth + per-file layout, capability-provider trait + scores + isolation, Future-Stages gated table, release flow (never delete), living-state + checkbox tracker + design tokens.
+
+## Skill package (opencode-first)
+
+- `skills/agent-init/SKILL.md` — auto-discovered by the `skill` tool (`~/.config/opencode/skills/`, `~/.claude/skills/`, `~/.agents/skills/`).
+- `.opencode/plugins/agent-init.mjs` — plugin entry so `"plugin": ["agent-init"]` loads cleanly (see `opencode.json.example`).
+- Claude/Codex template copy (`templates/project/.claude/`, `docs/AGENTS-CODEX.md`) ships as fallback.

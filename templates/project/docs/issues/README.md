@@ -4,13 +4,13 @@ Central tracker — one file per issue. Pick by UID, branch, link PR.
 
 ## File naming
 
-`docs/issues/<UID>-<kebab>.md` — UID `INC-XXX` zero-padded sequential. Next = max+1 (`git ls-files docs/issues/INC-*.md | sort`). Race → second merger renames via `git mv`.
+`docs/issues/<UID>-<kebab>.md` — UID `<PREFIX>-XXX` where `<PREFIX>` is the 3-letter acronym of your project name (scaffolded as `{{UID_PREFIX}}`, e.g. `my-cool-app` → `MCA-001`). Zero-padded sequential. Next = max+1 (`git ls-files docs/issues/<PREFIX>-*.md | sort`). Race → second merger renames via `git mv`.
 
 ## Required frontmatter
 
 ```markdown
 ---
-uid: INC-XXX
+uid: {{UID_PREFIX}}-XXX
 title: Short human title
 status: open | in_progress | review | closed
 severity: critical | high | medium | low | info
@@ -33,7 +33,7 @@ Use `file:line` refs. Severity: `critical` = money/auth/data-loss · `high` = co
 
 ## Workflow
 
-1. Pick or create (assign `assignee` + `in_progress` BEFORE fix). 2. Branch `<handle>/INC-XXX-desc` off `origin/main`. 3. Granular commits (`fix(INC-XXX): …`). 4. PR `fix(INC-XXX): …` body `Closes docs/issues/INC-XXX-*.md`. 5. Admin squash-merges → file `git mv` to `solved/` + `status: closed` (+ close GitHub issue manually after testing). 6. Never edit another's open issue without coordination.
+1. Pick or create (assign `assignee` + `in_progress` BEFORE fix). 2. Branch `<handle>/<PREFIX>-XXX-desc` off `origin/main`. 3. Granular commits (`fix(<PREFIX>-XXX): …`). 4. PR `fix(<PREFIX>-XXX): …` body `Closes docs/issues/<PREFIX>-XXX-*.md`. 5. Admin squash-merges → file `git mv` to `solved/` + `status: closed` (+ close GitHub issue manually after testing). 6. Never edit another's open issue without coordination.
 
 ## Solved
 
