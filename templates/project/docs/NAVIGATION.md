@@ -21,7 +21,7 @@
 | Path | Contents | State |
 | ---- | -------- | ----- |
 | `docs/ideas.md` | Ideas discussion → decisions + non-goals | Fresh (written once by /init, then frozen) |
-| `docs/issues/{{UID_PREFIX}}-*.md` | Active tracker | **Fresh — source of truth** |
+| `docs/issues/{{UID_PREFIX}}-*.md` | Active tracker (file new ones via `scripts/new-issue.mjs`) | **Fresh — source of truth** |
 | `docs/issues/solved/` | Closed + `## Solution` | **Fresh — append via `git mv`** |
 | `docs/issues/README.md` + `TEMPLATE.md` | Workflow + template | Fresh |
 | `docs/agent-logs/<handle>/` | One file per session | **Fresh — add-only, never edit** |

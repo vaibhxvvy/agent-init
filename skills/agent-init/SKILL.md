@@ -36,7 +36,34 @@ Rules:
 1. Ideas discussion (max 5 questions) → `docs/ideas.md` (Goal/Personas/Stack/Non-goals/Open questions). Frozen after.
 2. Scaffold (never overwrite without backup) from `templates/project/`.
 3. Fill all `{{PLACEHOLDERS}}`: project paragraph, stack table, commands, repo tree, personas, deploy quirks; first `<PREFIX>-001` issue + first session log.
+
+## Issue numbering (mandatory)
+
+Each project gets **its own** UID prefix — never `INC` or another project's code.
+
+| Project name | Prefix | Rule |
+| ------------ | ------ | ---- |
+| `arcdraw` | `ARC` | single word: first 2 letters + first consonant at index 2 |
+| `brikk` | `BRK` | index 2 is a vowel, so take the next consonant |
+| `brix` | `BRX` | consonant at index 2 |
+| `my-cool` | `MCO` | two words: 1 + 2 |
+| `my-cool-app` | `MCA` | three+ words: initials |
+
+`--prefix` overrides once at scaffold; after that the prefix is fixed.
+
+Every new issue goes through the scaffolded script, never a hand-written UID — it reads the existing issue filenames to learn the prefix, takes max+1 across `docs/issues/` **and** `docs/issues/solved/`, renders `TEMPLATE.md`, and refuses on a collision:
+
+```bash
+node scripts/new-issue.mjs --title "Login button dead on mobile"
+node scripts/new-issue.mjs --title "..." --severity high --label security --github
+```
+
+Use the same command whether the issue came from a GitHub issue page, a bug report, or an agent finding. `--github` additionally opens the `gh` issue and records its URL under `## References`; without it the local tracker stays the source of truth.
 4. Verify: formatter + typecheck + tests per stack; zero `{{...}}` except intentional ones in `ideas.md`/`design.md`/`RULE_TEMPLATE.md`; NAVIGATION paths all exist.
+
+## Scaffolded scripts
+
+The scaffold ships `scripts/new-issue.mjs` (zero-deps node >= 18). It is the only supported way to create an issue file — see Issue numbering below.
 
 ## Tracker contract
 

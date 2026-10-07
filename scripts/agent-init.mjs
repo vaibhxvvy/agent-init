@@ -24,13 +24,21 @@ if (/^(incruit|chopsticks)$/i.test(name)) {
   process.exit(1);
 }
 
-// UID prefix: explicit --prefix wins, else 3-letter acronym from project name.
+// UID prefix: explicit --prefix wins, else code derived from project name.
+// Single word -> first 2 letters + first consonant from index 2 (a vowel at
+// position 3 is skipped): arcdraw -> ARC, brikk -> BRK. Two words -> 1+2,
+// three+ words -> initials.
 function uidPrefixFor(projectName) {
   const parts = projectName.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
   let code = "";
   if (parts.length >= 3) code = parts.slice(0, 3).map((p) => p[0]).join("");
   else if (parts.length === 2) code = (parts[0][0] || "") + (parts[1].slice(0, 2) || "");
-  else if (parts.length === 1) code = parts[0].slice(0, 3);
+  else if (parts.length === 1) {
+    const w = parts[0];
+    code = w.slice(0, 2);
+    const third = w.slice(2).replace(/^[aeiou]+/, "")[0] || "";
+    code += third;
+  }
   code = (code || "prj").toUpperCase().replace(/[^A-Z0-9]/g, "X");
   return code.padEnd(3, "X").slice(0, 3);
 }
@@ -73,7 +81,7 @@ const fill = (p, map) => {
 const agentsPath = join(dst, "AGENTS.md");
 if (existsSync(agentsPath)) fill(agentsPath, { "{{PROJECT_NAME}}": name, "{{ONE_PARAGRAPH_OUTCOME}}": `${name} — outcome filled post ideas discussion`, "{{FRAMEWORK}}": stack, "{{UID_PREFIX}}": prefix });
 for (const rel of list(dst)) {
-  if (rel.endsWith(".md")) {
+  if (rel.endsWith(".md") || rel.endsWith(".mjs")) {
     const p = join(dst, rel);
     try { fill(p, { "{{PROJECT_NAME}}": name, "{{UID_PREFIX}}": prefix }); } catch {}
   }

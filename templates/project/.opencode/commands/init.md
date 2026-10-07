@@ -24,7 +24,7 @@ Run `node scripts/agent-init.mjs --here` if present, else manually copy from the
 - `AGENTS.md`, `AGENTRULES.md`, `roadmap.md`
 - `docs/NAVIGATION.md`, `docs/ideas.md` (keep Phase 1 content)
 - `docs/design.md` (architecture decisions — single-state pattern)
-- `docs/issues/{README.md,TEMPLATE.md}`, `docs/issues/solved/.gitkeep`
+- `docs/issues/{README.md,TEMPLATE.md}`, `docs/issues/solved/.gitkeep`, `scripts/new-issue.mjs` (auto issue numbering)
 - `docs/agent-logs/{README.md,CONTRIBUTORS.md,KNOWN_ISSUES.md}`
 - `docs/rules/README.md`, `docs/plans/.gitkeep`, `docs/audits/.gitkeep`
 - `.opencode/commands/` (keep this init + add roadmap/design/log commands)
@@ -36,7 +36,9 @@ Back up any existing `AGENTS.md` → `AGENTS.md.bak-<ts>` first.
 - `AGENTS.md`: project paragraph (from ideas), stack table, commands (detected), repo tree (`!` tree output), personas, deploy quirks.
 - `AGENTRULES.md`: set handle key (`init.contributor`), keep workflow as-is.
 - `docs/agent-logs/CONTRIBUTORS.md`: first handle row.
-- Create `docs/issues/<PREFIX>-001-project-bootstrap.md` (prefix = 3-letter acronym of project name, e.g. `my-cool-app` → `MCA-001`; `status: in_progress`, `assignee: <handle>`) + first session log `docs/agent-logs/<handle>/YYYY-MM-DD-HHmm.md` with Task/Actions/Files/Commits/Verification/Follow-ups.
+- Create `docs/issues/<PREFIX>-001-project-bootstrap.md` (`status: in_progress`, `assignee: <handle>`) + first session log `docs/agent-logs/<handle>/YYYY-MM-DD-HHmm.md` with Task/Actions/Files/Commits/Verification/Follow-ups.
+  Prefix = this project's code, derived from the project name: single word → first 2 letters + first consonant at index 2 (`arcdraw`→`ARC`, `brikk`→`BRK`, `brix`→`BRX`); two words → 1+2 (`my-cool`→`MCO`); three+ → initials (`my-cool-app`→`MCA`). Never borrow another project's code or a shared `INC` prefix. `--prefix` overrides once.
+- After every later issue (from a GitHub page, a bug report, or your own finding) run `node scripts/new-issue.mjs --title "..." [--github]` — never hand-write a UID. It takes max+1 from existing issue files and refuses on collision.
 - Link everything in `docs/NAVIGATION.md` (verify every path exists).
 
 ## Phase 4 — Verify + report

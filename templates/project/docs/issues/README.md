@@ -4,7 +4,29 @@ Central tracker — one file per issue. Pick by UID, branch, link PR.
 
 ## File naming
 
-`docs/issues/<UID>-<kebab>.md` — UID `<PREFIX>-XXX` where `<PREFIX>` is the 3-letter acronym of your project name (scaffolded as `{{UID_PREFIX}}`, e.g. `my-cool-app` → `MCA-001`). Zero-padded sequential. Next = max+1 (`git ls-files docs/issues/<PREFIX>-*.md | sort`). Race → second merger renames via `git mv`.
+`docs/issues/<UID>-<kebab>.md` — UID `<PREFIX>-XXX` where `<PREFIX>` is **this project's** code (scaffolded as `{{UID_PREFIX}}`), never a shared or borrowed one. Single word → first 2 letters + first consonant at index 2 (`arcdraw` → `ARC`, `brikk` → `BRK`); two words → 1+2 (`my-cool` → `MCO`); three+ → initials (`my-cool-app` → `MCA`). Zero-padded sequential, next = max+1. Race → second merger renames via `git mv`.
+
+## Creating one — use the script
+
+Never hand-write a UID. The script reads the existing issue filenames to learn `<PREFIX>`, takes max+1, renders `TEMPLATE.md`, and refuses on a collision instead of overwriting.
+
+```bash
+node scripts/new-issue.mjs --title "Login button dead on mobile"
+node scripts/new-issue.mjs --title "..." --severity high --label security,auth --github
+```
+
+| Flag | Default | Notes |
+| ---- | ------- | ----- |
+| `--title` | required | plain-language title; also becomes the file slug |
+| `--slug` | from title | override the kebab suffix |
+| `--severity` | `medium` | `critical\|high\|medium\|low\|info` |
+| `--label` | none | repeatable |
+| `--assignee` | `unassigned` | handle |
+| `--description` | empty | one-paragraph Description |
+| `--github` | off | also open the `gh` issue, record URL under `## References` |
+| `--dry-run` | off | print the path, write nothing |
+
+Same command whether the report came from a GitHub issue page, a user bug report, or an agent finding — one numbering path per project. `--github` is optional; `docs/issues/` stays the source of truth either way.
 
 ## Required frontmatter
 
